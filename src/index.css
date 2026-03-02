@@ -46,6 +46,7 @@ body {
   border-radius: 0;
   max-width: 750px;
   margin: 0 auto;
+  overflow: visible !important;
   border-radius: 20px;
 }
 
@@ -124,7 +125,6 @@ select:focus {
   font-size: 10px !important;
   height: 35px !important;
   width: 35px !important;
-  top: 60% !important;
 }
 
 .swiper-button-next:hover,
