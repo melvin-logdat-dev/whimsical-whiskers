@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const SearchForm = ({ onBreedSelect }) => {
   const [breeds, setBreeds] = useState([]);
@@ -6,10 +6,19 @@ const SearchForm = ({ onBreedSelect }) => {
 
   useEffect(() => {
     let isMounted = true;
-    fetch("https://api.thecatapi.com/v1/breeds")
-      .then((response) => response.json())
-      .then((data) => setBreeds(data))
-      .catch((error) => console.error("Error fetching breeds:", error));
+    const fetchData = async () => {
+      try {
+        const res = await fetch("https://api.thecatapi.com/v1/breeds");
+        const data = await res.json();
+        if (isMounted) {
+          setBreeds(data);
+        }
+      } catch (err) {
+        console.error("Error fetching breeds:", err);
+      }
+    };
+
+    fetchData();
     return () => {
       isMounted = false;
     };

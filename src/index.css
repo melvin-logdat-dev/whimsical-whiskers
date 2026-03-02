@@ -16,6 +16,7 @@ body {
   max-width: 1024px;
   margin: 0 auto;
   padding: 40px 40px 120px;
+  min-height: 100vh;
 }
 
 .header {
@@ -104,4 +105,11 @@ select:focus {
   background-color: #da3c17;
   color: white;
   cursor: pointer;
+}
+
+.preloader {
+  height: 200px;
+  width: 200px;
+  margin: 0 auto;
+  display: block;
 }
