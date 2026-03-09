@@ -1,5 +1,6 @@
 import catImage from "../assets/calico-cat.png";
 import preloader from "../assets/loading-cat.gif";
+import axios from "axios";
 import { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
@@ -14,11 +15,10 @@ const Banner = ({ breedId }) => {
 
   useEffect(() => {
     if (!breedId) return;
-
+    const controller = new AbortController();
     const fetchData = async () => {
       try {
         setIsLoading(true);
-
         // if cached, use it immediately
         if (cache[breedId]) {
           setImages(cache[breedId].images);
@@ -28,14 +28,17 @@ const Banner = ({ breedId }) => {
         }
 
         const [breedRes, imageRes] = await Promise.all([
-          fetch(`https://api.thecatapi.com/v1/breeds/${breedId}`),
-          fetch(
+          axios.get(`https://api.thecatapi.com/v1/breeds/${breedId}`, {
+            signal: controller.signal,
+          }),
+          axios.get(
             `https://api.thecatapi.com/v1/images/search?breed_ids=${breedId}&limit=5`,
+            { signal: controller.signal },
           ),
         ]);
 
-        const breedData = await breedRes.json();
-        const imageData = await imageRes.json();
+        const breedData = breedRes.data;
+        const imageData = imageRes.data;
 
         const name = breedData?.name || "Cat";
         setBreedName(name);
@@ -62,7 +65,6 @@ const Banner = ({ breedId }) => {
         } else {
           setImages([{ src: catImage, alt: "Cat Banner" }]);
         }
-
         setIsLoading(false);
       } catch (err) {
         console.error("Error fetching banner data:", err);
@@ -71,6 +73,10 @@ const Banner = ({ breedId }) => {
     };
 
     fetchData();
+    // Cleanup: abort request if breedId changes or component unmounts
+    return () => {
+      controller.abort();
+    };
   }, [breedId, cache]);
 
   return (
@@ -89,7 +95,7 @@ const Banner = ({ breedId }) => {
         >
           {images.map((img, i) => (
             <SwiperSlide key={i}>
-              <img src={img.src} alt={img.alt} className="BannerImage" />
+              <img src={img.src} alt={breedName} className="BannerImage" />
             </SwiperSlide>
           ))}
         </Swiper>

@@ -1,26 +1,28 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const SearchForm = ({ onBreedSelect }) => {
   const [breeds, setBreeds] = useState([]);
   const [selectedBreed, setSelectedBreed] = useState("");
 
   useEffect(() => {
-    let isMounted = true;
-    const fetchData = async () => {
-      try {
-        const res = await fetch("https://api.thecatapi.com/v1/breeds");
-        const data = await res.json();
-        if (isMounted) {
-          setBreeds(data);
+    const controller = new AbortController();
+    // Make a request for a user with a given ID
+    axios
+      .get("https://api.thecatapi.com/v1/breeds", { signal: controller.signal })
+      .then((response) => {
+        // handle success
+        setBreeds(response.data);
+      })
+      .catch((error) => {
+        if (error.name === "CanceledError") {
+          return;
         }
-      } catch (err) {
-        console.error("Error fetching breeds:", err);
-      }
-    };
+        console.error("Error fetching and parsing data", error);
+      });
 
-    fetchData();
     return () => {
-      isMounted = false;
+      controller.abort();
     };
   }, []);
 
