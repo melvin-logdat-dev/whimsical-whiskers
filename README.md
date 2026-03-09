@@ -15,5 +15,3 @@ Start the development server:
 ```sh
 yarn dev
 ```
-
-Open [localhost:5713/whimsical-whiskers/](http://localhost:5173/whimsical-whiskers/) to preview emails during development.
