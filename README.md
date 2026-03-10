@@ -1,6 +1,6 @@
 # Whimsical Whiskers
 
-This Web Application is for all Cat Lovers wants to know all domestic Cat Breeds
+This web application is for cat lovers who want to know more about domestic cat breeds.
 
 ## Getting Started
 
