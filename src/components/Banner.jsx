@@ -11,10 +11,15 @@ const Banner = ({ breedId }) => {
   const [images, setImages] = useState([]);
   const [breedName, setBreedName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const cacheRef = useRef({}); // useRef instead of state
+  const cacheRef = useRef({});
 
   useEffect(() => {
-    if (!breedId) return;
+    // if (!breedId) return;
+    if (!breedId) {
+      setImages([]);
+      setBreedName("");
+      return;
+    }
     const controller = new AbortController();
 
     const fetchData = async () => {
